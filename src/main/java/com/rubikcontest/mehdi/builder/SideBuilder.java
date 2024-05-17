@@ -6,6 +6,7 @@ import com.rubikcontest.mehdi.rotator.SideRotator;
 
 import java.util.Arrays;
 
+
 public class SideBuilder implements Builder {
 
     private RubikDataStruct struct;
@@ -60,7 +61,6 @@ public class SideBuilder implements Builder {
             tempSide[0][0] = tempLine[2];
             tempSide[0][1] = tempLine[1];
             tempSide[0][2] = tempLine[0];
-
             struct.setBottomSide(tempSide);
 
             struct.flush();
@@ -113,7 +113,11 @@ public class SideBuilder implements Builder {
 
             // top
             tempSide = getCopy(struct.getTop().getVal());
-            tempSide[0] = struct.getLeft().getLeftLine().clone();
+            tempLine = struct.getLeft().getLeftLine().clone();
+            tempSide[0][0] = tempLine[2];
+            tempSide[0][1] = tempLine[1];
+            tempSide[0][2] = tempLine[0];
+
             struct.setTopSide(tempSide);
 
             // left
@@ -135,7 +139,9 @@ public class SideBuilder implements Builder {
             // bottom
             tempSide = getCopy(struct.getBottom().getVal());
             tempLine = struct.getRight().getRightLine().clone();
-            tempSide[2] = tempLine;
+            tempSide[2][0] = tempLine[2];
+            tempSide[2][1] = tempLine[1];
+            tempSide[2][2] = tempLine[0];
             struct.setBottomSide(tempSide);
 
             struct.flush();
@@ -172,7 +178,7 @@ public class SideBuilder implements Builder {
 
             // bottom
             tempSide = getCopy(struct.getBottom().getVal());
-            tempLine = struct.getLeft().getLeftLine();
+            tempLine = struct.getLeft().getLeftLine().clone();
             tempSide[2] = tempLine;
             struct.setBottomSide(tempSide);
 
@@ -268,6 +274,7 @@ public class SideBuilder implements Builder {
             char[][] tempSide;
             char[] tempLine = Arrays.copyOf(struct.getBack().getTopLine(), 3);
 
+            // left
             struct.setLeftSide(rotator.rotateClockwise(struct.getLeft().getVal()));
 
             // front
@@ -281,9 +288,9 @@ public class SideBuilder implements Builder {
             // top
             tempSide = getCopy(struct.getTop().getVal());
             tempLine = struct.getBack().getRightLine().clone();
-            tempSide[0][0] = tempLine[0];
+            tempSide[0][0] = tempLine[2];
             tempSide[1][0] = tempLine[1];
-            tempSide[2][0] = tempLine[2];
+            tempSide[2][0] = tempLine[0];
             struct.setTopSide(tempSide);
 
             // bottom
@@ -297,9 +304,9 @@ public class SideBuilder implements Builder {
             // back
             tempSide = getCopy(struct.getBack().getVal());
             tempLine = struct.getBottom().getLeftLine().clone();
-            tempSide[0][2] = tempLine[0];
+            tempSide[0][2] = tempLine[2];
             tempSide[1][2] = tempLine[1];
-            tempSide[2][2] = tempLine[2];
+            tempSide[2][2] = tempLine[0];
             struct.setBackSide(tempSide);
 
             struct.flush();
@@ -410,6 +417,7 @@ public class SideBuilder implements Builder {
             // left
             tempSide = getCopy(struct.getLeft().getVal());
             tempLine = struct.getBack().getTopLine().clone();
+            // System.out.println(tempLine);
             tempSide[0] = tempLine;
             struct.setLeftSide(tempSide);
 
@@ -418,14 +426,47 @@ public class SideBuilder implements Builder {
         }
 
         if (action == Action.rotateBottomToLeft) {
+            char[][] tempSide;
+            char[] tempLine;
+
+            // bottom
+            struct.setBottomSide(rotator.rotateCounterClockwise(struct.getBottom().getVal()));
+
+
+            // front
+            tempSide = getCopy(struct.getFront().getVal());
+            tempLine = struct.getRight().getBottomLine().clone();
+            tempSide[2] = tempLine;
+            struct.setFrontSide(tempSide);
+
+            // right
+            tempSide = getCopy(struct.getRight().getVal());
+            tempLine = struct.getBack().getBottomLine().clone();
+            tempSide[2] = tempLine;
+            struct.setRightSide(tempSide);
+
+            // back
+            tempSide = getCopy(struct.getBack().getVal());
+            tempLine = struct.getLeft().getBottomLine().clone();
+            tempSide[2] = tempLine;
+            struct.setBackSide(tempSide);
+
+            // left
+            tempSide = getCopy(struct.getLeft().getVal());
+            tempLine = struct.getFront().getBottomLine().clone();
+            tempSide[2] = tempLine;
+            struct.setLeftSide(tempSide);
+
+            struct.flush();
         }
 
         if (action == Action.rotateBottomToRight) {
             char[][] tempSide;
             char[] tempLine;
 
-            // top
+            // bottom
             struct.setBottomSide(rotator.rotateClockwise(struct.getBottom().getVal()));
+
 
             // front
             tempSide = getCopy(struct.getFront().getVal());
@@ -435,7 +476,7 @@ public class SideBuilder implements Builder {
 
             // right
             tempSide = getCopy(struct.getRight().getVal());
-            tempLine = struct.getFront().getBottomLine();
+            tempLine = struct.getFront().getBottomLine().clone();
             tempSide[2] = tempLine;
             struct.setRightSide(tempSide);
 
@@ -449,7 +490,7 @@ public class SideBuilder implements Builder {
             tempSide = getCopy(struct.getLeft().getVal());
             tempLine = struct.getBack().getBottomLine().clone();
             tempSide[2] = tempLine;
-            struct.setBottomSide(tempSide);
+            struct.setLeftSide(tempSide);
 
             struct.flush();
         }
@@ -462,3 +503,4 @@ public class SideBuilder implements Builder {
                 .toArray(char[][]::new);
     }
 }
+
